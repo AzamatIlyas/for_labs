@@ -1,8 +1,8 @@
 import os 
-x = input()
-y = ['a', 'b', 'c']
-f = open(x, 'w')
-f.write(y)
-f.close()
-f.open(x, 'r')
-print(f.read(x))
+def write(name,list):
+    with open(name,'w') as file:
+        for i in list:
+            file.write(str(i)+"\n")
+file = input()
+arr = [str(i) for i in input("Input list : ").split()]
+write(file,arr)

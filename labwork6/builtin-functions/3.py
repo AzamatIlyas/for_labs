@@ -1,12 +1,8 @@
-def polindrom(a):
-    a1 = a[::-1]
-    if a1 == a:
-        return "yes"
-a = input()
-aa =  polindrom(a)
-
-
-if aa == "yes" :
-    print("YES, this word is polindrom")
-else:
-    print("NO, this word is not polindrom")
+def word(a):
+    a = a.lower().replace(" ","")
+    if a == a[::-1]:
+        print("yes")
+    else:
+        print("no")
+d = input("Here : ")
+word(d)

@@ -1,18 +1,14 @@
-def char(a):
-    b = 0
-    c = 0
-    for i in range(len(a)):
-        if a[i] != " ":
-            char = a[i]
-            if char.isupper():
-                b+=1
-                i+=1
-            elif char.islower():
-                c+=1
-                i+=1
-        else:
-            i+=1
-    print(f"{b} , {c}")
-        
-a = str(input())
-aa = char(a)
+def cases(a):
+    upper11 = 0
+    lower11 = 0
+
+    for i in a:
+        if i.isupper():
+            upper11+=1
+        elif i.islower():
+            lower11+=1
+    return upper11,lower11
+
+word = input("Input here : ")
+upper,lower = cases(word)
+print(upper,lower)

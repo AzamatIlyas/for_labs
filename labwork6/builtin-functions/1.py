@@ -1,8 +1,9 @@
-from functools import reduce
+import operator
+import functools
 
 def multiply(a):
-    result = reduce(lambda x, y: x * y, a)
+    result = functools.reduce(operator.mul,a)
     return result
 
-a = [int(i) for i in input("list a: ").split()]
-print(f"result: {multiply(a)}")
+arr = [int(i) for i in input("list a: ").split()]
+print(multiply(arr))
