@@ -1,88 +1,211 @@
 import pygame
+import sys
+import math
+pygame.init()
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((640, 480))
-    clock = pygame.time.Clock()
-    
-    radius = 15
-    x = 0
-    y = 0
-    mode = 'blue'
-    points = []
-    
-    while True:
-        
-        pressed = pygame.key.get_pressed()
-        
-        alt_held = pressed[pygame.K_LALT] or pressed[pygame.K_RALT]
-        ctrl_held = pressed[pygame.K_LCTRL] or pressed[pygame.K_RCTRL]
-        
-        for event in pygame.event.get():
-            
-            # determin if X was clicked, or Ctrl+W or Alt+F4 was used
-            if event.type == pygame.QUIT:
-                return
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w and ctrl_held:
-                    return
-                if event.key == pygame.K_F4 and alt_held:
-                    return
-                if event.key == pygame.K_ESCAPE:
-                    return
-            
-                # determine if a letter key was pressed
-                if event.key == pygame.K_r:
-                    mode = 'red'
-                elif event.key == pygame.K_g:
-                    mode = 'green'
-                elif event.key == pygame.K_b:
-                    mode = 'blue'
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1: # left click grows radius
-                    radius = min(200, radius + 1)
-                elif event.button == 3: # right click shrinks radius
-                    radius = max(1, radius - 1)
-            
-            if event.type == pygame.MOUSEMOTION:
-                # if mouse moved, add point to list
-                position = event.pos
-                points = points + [position]
-                points = points[-256:]
-                
-        screen.fill((0, 0, 0))
-        
-        # draw all points
-        i = 0
-        while i < len(points) - 1:
-            drawLineBetween(screen, i, points[i], points[i + 1], radius, mode)
-            i += 1
-        
-        pygame.display.flip()
-        
-        clock.tick(60)
+WIDTH = 960
+HEIGHT = 640
 
-def drawLineBetween(screen, index, start, end, width, color_mode):
-    c1 = max(0, min(255, 2 * index - 256))
-    c2 = max(0, min(255, 2 * index))
-    
-    if color_mode == 'blue':
-        color = (c1, c1, c2)
-    elif color_mode == 'red':
-        color = (c2, c1, c1)
-    elif color_mode == 'green':
-        color = (c1, c2, c1)
-    
-    dx = start[0] - end[0]
-    dy = start[1] - end[1]
-    iterations = max(abs(dx), abs(dy))
-    
-    for i in range(iterations):
-        progress = 1.0 * i / iterations
-        aprogress = 1 - progress
-        x = int(aprogress * start[0] + progress * end[0])
-        y = int(aprogress * start[1] + progress * end[1])
-        pygame.draw.circle(screen, color, (x, y), width)
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
+base_layer = pygame.Surface((WIDTH,HEIGHT))
+done = False
+eraser= False
+Leftmouse = False
+rectangle = False
+circle = False
+square = False
+triangle = False
+diamond = False
+tenqabyrgaly = False
+romb = False
 
-main()
+# Colors
+colorBlack = (0,0,0)
+colorWhite = (255,255,255)
+colorRed = (255,0,0)
+colorGreen = (0,255,0)
+colorBlue = (0 ,0,255)
+colorYellow = (255,255,0)
+color = colorWhite
+
+# rect
+def rectFunction(x1,y1,x2,y2):
+    return pygame.Rect(min(x1,x2),min(y1,y2),abs(x1-x2),abs(y1-y2))
+# circle radius
+def circleFunction(x1,y1,x2,y2):
+     radius =  int(math.sqrt((x2-x1)**2 + (y2-y1)**2))
+     return radius
+# eraser
+def eraserFunction(x1,y1,x2,y2):
+      return pygame.Rect(min(x1,x2),min(y1,y2),abs(x1-x2),abs(y1-y2))
+# square
+def squareFunction(x1, y1, x2, y2):
+    size = max(abs(x2 - x1), abs(y2 - y1))
+    return pygame.Rect(min(x1,x2),min(y1,y2), size, size)
+# tenqabyrgaly_triangle
+def tenqabyrgaly_triangle(x1,y1,x2,y2):
+    sol_zhak = [x1,y1]
+    on_zhak = [x2,y2]
+    asty = [x1,y2]
+    points = [sol_zhak,on_zhak,asty]
+    return points
+# triangle
+def tikburyshty_triangle(x1,y1,x2,y2):
+    sol_zhak = [x1,y1]
+    on_zhak = [x1-(x2-x1),y1+(x2-x1)*math.sqrt(3)]
+    asty = [x2,y1+(x2-x1)*math.sqrt(3),]
+    points = [sol_zhak,on_zhak,asty]
+    return points
+# romb
+def rombFunction(x1, y1, x2, y2):
+    sol_zhak = [x1,y1]
+    on_zhak = [x2,y2]
+    x = (x1 + x2) / 2
+    y = (y1 + y2) / 2
+    diagonal = ((x2 - x1)**2 + (y2 - y1)**2)**0.5 / 2
+    asty = [x -diagonal, y]
+    en_asty = [x + diagonal, y]
+    points = [sol_zhak, asty, on_zhak, en_asty]
+    return points
+
+
+# main part
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        # first point
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            Leftmouse = True
+            prevx = event.pos[0]
+            prevy = event.pos[1]
+        # last point
+        if Leftmouse:
+                currx = event.pos[0]
+                curry = event.pos[1]
+        if event.type == pygame.KEYDOWN:
+            # Eraser
+            if event.key == pygame.K_e:
+                eraser= True
+                rectangle = False
+                circle = False
+                square = False
+                triangle = False
+                diamond = False
+                tenqabyrgaly = False
+                romb = False
+            # Rect
+            if event.key == pygame.K_1:
+                rectangle = True
+                eraser= False
+                circle = False
+                square = False
+                triangle = False
+                diamond = False
+                tenqabyrgaly = False
+                romb = False
+            # донгелек
+            if event.key == pygame.K_2:
+                circle = True
+                eraser= False
+                rectangle = False
+                square = False
+                triangle = False
+                diamond = False
+                tenqabyrgaly = False
+                romb = False
+            # квадрат
+            if event.key == pygame.K_3:
+                square = True
+                eraser= False
+                rectangle = False
+                circle = False
+                triangle = False
+                diamond = False
+                tenqabyrgaly = False
+                romb = False
+            # ушбурыш
+            if event.key == pygame.K_4:
+                triangle = True
+                eraser= False
+                rectangle = False
+                circle = False
+                square = False
+                diamond = False
+                tenqabyrgaly = False
+                romb = False
+            # тен ушбырыш
+            if event.key == pygame.K_5:
+                tenqabyrgaly=True
+                eraser= False
+                Leftmouse = False
+                rectangle = False
+                circle = False
+                square = False
+                triangle = False
+                diamond = False
+                romb = False
+            # ромб
+            if event.key ==pygame.K_6:
+                romb= True
+                eraser= False
+                Leftmouse = False
+                rectangle = False
+                circle = False
+                square = False
+                triangle = False
+                diamond = False
+                tenqabyrgaly = False
+            if event.key==pygame.K_b:
+                color = colorBlue
+            if event.key==pygame.K_y:
+                color = colorYellow
+            if event.key==pygame.K_r:
+                color=colorRed
+            if event.key==pygame.K_g:
+                color = colorGreen
+        # мышканы жібергенде
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            Leftmouse = False
+            if eraser:
+                pygame.draw.rect(screen,colorBlack,eraserFunction(prevx,prevy,currx,curry))
+            if rectangle:
+                pygame.draw.rect(screen,color,rectFunction(prevx,prevy,currx,curry),2)
+            if circle:
+                radius = circleFunction(prevx,prevy,currx,curry)
+                pygame.draw.circle(screen,color,(prevx,prevy),radius,2)
+            if square:
+                pygame.draw.rect(screen,color,squareFunction(prevx,prevy,currx,curry),2)
+            base_layer.blit(screen,(0,0))
+            if triangle:
+                points = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+            if tenqabyrgaly:
+                points = tikburyshty_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+            if romb:
+                points = rombFunction(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+            
+    if Leftmouse:
+        screen.blit(base_layer,(0,0))
+        if eraser:
+            pygame.draw.rect(screen,colorYellow,eraserFunction(prevx,prevy,currx,curry),2)
+        if rectangle:
+            pygame.draw.rect(screen,color,rectFunction(prevx,prevy,currx,curry),2)
+        if circle:
+            radius = circleFunction(prevx,prevy,currx,curry)
+            pygame.draw.circle(screen,color,(prevx,prevy),radius,2)
+        if square:
+            pygame.draw.rect(screen,color,squareFunction(prevx,prevy,currx,curry),2)
+        if triangle:
+                points = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+        if tenqabyrgaly:
+                points = tikburyshty_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+        if romb:
+                points = rombFunction(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,points,2)
+    pygame.display.flip()
