@@ -25,6 +25,7 @@ monyespeed = 5
 SCORE = 0
 money = 0
 count = 0
+dddd = 0
 
 #Setting up Fonts
 font = pygame.font.SysFont("Verdana", 60)
@@ -53,9 +54,11 @@ class Enemy(pygame.sprite.Sprite):
 
         def move(self):
             global SCORE
+            global dddd
             self.rect.move_ip(0,SPEED)
             if (self.rect.bottom > 600):
                 SCORE += 1
+                dddd += 1
                 self.rect.top = 0
                 self.rect.center = (random.randint(40, SCREEN_WIDTH - 40), 0)
 
@@ -193,6 +196,13 @@ while running:
     if count % 15 >= 0 and count > 14 :
         SPEED += 5
         count = count - 15
+
+    if dddd % 3 == 0 and dddd > 2:
+        dddd = 0
+        cong = font_small.render("CONGRATULATION", True, RED)
+        DISPLAYSURF.blit(cong, (150,150))
+        
+
         
 
     #To be run if collision occurs between Player and Enemy

@@ -26,6 +26,7 @@ def restart_game():
     x,y = randrange(0,res,size),randrange(0,res,size)
     a,b = randrange(0,res,size),randrange(0,res,size)
     apple = randrange(0,res,size),randrange(0,res,size)
+    apple2 = randrange(0,res,size),randrange(0,res,size)
     dirs = {'UP':True,'DOWN':True,'RIGHT':True,'LEFT':True}
     
     length = 1

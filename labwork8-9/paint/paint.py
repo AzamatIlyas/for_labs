@@ -44,29 +44,29 @@ def squareFunction(x1, y1, x2, y2):
     return pygame.Rect(min(x1,x2),min(y1,y2), size, size)
 # tenqabyrgaly_triangle
 def tenqabyrgaly_triangle(x1,y1,x2,y2):
-    sol_zhak = [x1,y1]
-    on_zhak = [x2,y2]
-    asty = [x1,y2]
-    points = [sol_zhak,on_zhak,asty]
-    return points
+    left = [x1,y1]
+    right = [x2,y2]
+    jjj = [x1,y2]
+    point = [left,right,jjj]
+    return point
 # triangle
 def tikburyshty_triangle(x1,y1,x2,y2):
-    sol_zhak = [x1,y1]
-    on_zhak = [x1-(x2-x1),y1+(x2-x1)*math.sqrt(3)]
-    asty = [x2,y1+(x2-x1)*math.sqrt(3),]
-    points = [sol_zhak,on_zhak,asty]
-    return points
+    left = [x1,y1]
+    right = [x1-(x2-x1),y1+(x2-x1)*math.sqrt(3)]
+    jjj = [x2,y1+(x2-x1)*math.sqrt(3),]
+    point = [left,right,jjj]
+    return point
 # romb
 def rombFunction(x1, y1, x2, y2):
-    sol_zhak = [x1,y1]
-    on_zhak = [x2,y2]
+    left = [x1,y1]
+    right = [x2,y2]
     x = (x1 + x2) / 2
     y = (y1 + y2) / 2
     diagonal = ((x2 - x1)**2 + (y2 - y1)**2)**0.5 / 2
-    asty = [x -diagonal, y]
-    en_asty = [x + diagonal, y]
-    points = [sol_zhak, asty, on_zhak, en_asty]
-    return points
+    jjj = [x -diagonal, y]
+    en_jjj = [x + diagonal, y]
+    point = [left, jjj, right, en_jjj]
+    return point
 
 
 # main part
@@ -179,14 +179,14 @@ while not done:
                 pygame.draw.rect(screen,color,squareFunction(prevx,prevy,currx,curry),2)
             base_layer.blit(screen,(0,0))
             if triangle:
-                points = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
             if tenqabyrgaly:
-                points = tikburyshty_triangle(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = tikburyshty_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
             if romb:
-                points = rombFunction(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = rombFunction(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
             
     if Leftmouse:
         screen.blit(base_layer,(0,0))
@@ -200,12 +200,12 @@ while not done:
         if square:
             pygame.draw.rect(screen,color,squareFunction(prevx,prevy,currx,curry),2)
         if triangle:
-                points = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = tenqabyrgaly_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
         if tenqabyrgaly:
-                points = tikburyshty_triangle(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = tikburyshty_triangle(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
         if romb:
-                points = rombFunction(prevx,prevy,currx,curry)
-                pygame.draw.polygon(screen,color,points,2)
+                point = rombFunction(prevx,prevy,currx,curry)
+                pygame.draw.polygon(screen,color,point,2)
     pygame.display.flip()
