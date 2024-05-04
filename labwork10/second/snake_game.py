@@ -26,6 +26,8 @@ def gamers(text,score,level):
 
     conn.commit()
 
+
+
 def current(pos,score):
     with open('labwork10/second/current_state.csv','a') as file:
         file.write(f"{pos},{score}\n")
@@ -194,6 +196,9 @@ def first_level():
 
 
         clock.tick(fps)  
+
+        if count >= 5:
+            second_level()
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_TAB]:
@@ -431,35 +436,7 @@ def second_level():
             if keys[pygame.K_RIGHT] and dirs['RIGHT']: 
                 dx, dy = 1, 0 
                 dirs = {'UP': True, 'DOWN': True, 'RIGHT': False, 'LEFT': False} 
-    pygame.display.flip()
+        pygame.display.flip()
 
-# for event in pygame.event.get():
-#     if event.type==pygame.QUIT:
-#         running=False
-#     if event.type == pygame.KEYDOWN:
-#         if event.key == pygame.K_1:
-#             first_level()
-#         elif event.key == pygame.K_2:
-#             second_level()
-#         # elif event.key == pygame.K_3:
-#         #     thrird_level()
-    
-surface2 = pygame.display.set_mode((800,800))
 
-surface_run = True
-
-while surface_run:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            surface_run = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_1:
-                first_level()
-            elif event.key == pygame.K_2:
-                second_level()
-        
-        
-    screen.fill("white")
-
-    pygame.display.flip()
-pygame.quit()
+first_level()
